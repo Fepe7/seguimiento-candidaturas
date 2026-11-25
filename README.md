@@ -1,5 +1,7 @@
 # Seguimiento de candidaturas
 
+**App publicada:** https://seguimiento-candidaturas.vercel.app
+
 App web para llevar el control de una búsqueda de empleo: empresas, puesto, estado de cada candidatura, fecha de seguimiento y notas. Cada usuario entra con su email y contraseña y solo ve sus propias candidaturas.
 
 ## Qué hace
