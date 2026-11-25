@@ -11,6 +11,7 @@ import {
   type FirestoreError,
   type Unsubscribe,
 } from "firebase/firestore";
+import { ApplicationValidationError } from "./errors";
 import { db } from "./firebase";
 
 export const APPLICATION_STATUSES = [
@@ -126,7 +127,7 @@ function assertValid(input: ApplicationInput): ApplicationInput {
   const result = validateApplication(input);
   if (!result.valid) {
     const first = Object.values(result.errors)[0];
-    throw new Error(first ?? "La candidatura no es válida.");
+    throw new ApplicationValidationError(first ?? "La candidatura no es válida.");
   }
   return normalizeApplication(input);
 }

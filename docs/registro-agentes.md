@@ -22,3 +22,7 @@ Cada ronda del bucle Develop → Testing queda apuntada aquí por el orquestador
 ### T1 · Ronda 2
 - **Develop:** corrige `firestore.rules`: `createdAt` y `updatedAt` como `number`, `createdAt` no cambia en `update` y `followUp` con formato `AAAA-MM-DD`. El orquestador despliega las reglas.
 - **Testing:** **APROBADO**. Sin fallos.
+
+### T2 + T3 · Ronda 1
+- **Develop:** crea `AuthProvider`, `/login` (entrar y crear cuenta), el panel con `StatsBar`, `ApplicationForm` y `ApplicationList`, filtros, buscador, borrado con confirmación y avisos de seguimiento vencido. Añade `auth-errors.ts`, `errors.ts` y `form.ts` con tests (49 tests en total).
+- **Testing:** **APROBADO**. Sin fallos bloqueantes. Observaciones menores: la fecha de hoy se calcula al montar el panel y el título usaba mayúsculas a la inglesa (corregido por el orquestador).
