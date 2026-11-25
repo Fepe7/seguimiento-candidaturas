@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Cada usuario solo puede leer y escribir sus propias candidaturas.
+    match /users/{userId}/applications/{appId} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+      function validStatus(s) {
+        return s in ['pendiente', 'enviada', 'entrevista', 'oferta', 'rechazada'];
+      }
+      function validApp(d) {
+        return d.keys().hasOnly(['company', 'role', 'location', 'status', 'link', 'notes', 'followUp', 'createdAt', 'updatedAt'])
+          && d.company is string && d.company.size() > 0 && d.company.size() <= 100
+          && d.role is string && d.role.size() > 0 && d.role.size() <= 120
+          && d.location is string && d.location.size() <= 100
+          && d.link is string && d.link.size() <= 500
+          && d.notes is string && d.notes.size() <= 2000
+          && (d.followUp == null || (d.followUp is string && d.followUp.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')))
+          && d.createdAt is number && d.updatedAt is number
+          && validStatus(d.status);
+      }
+      allow read, delete: if isOwner();
+      allow create: if isOwner() && validApp(request.resource.data);
+      allow update: if isOwner() && validApp(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
