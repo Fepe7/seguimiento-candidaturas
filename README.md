@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Seguimiento de candidaturas
 
-## Getting Started
+App web para llevar el control de una búsqueda de empleo: empresas, puesto, estado de cada candidatura, fecha de seguimiento y notas. Cada usuario entra con su email y contraseña y solo ve sus propias candidaturas.
 
-First, run the development server:
+## Qué hace
+
+- Registro e inicio de sesión con email y contraseña (Firebase Authentication).
+- Crear, editar y borrar candidaturas, con confirmación antes de borrar.
+- Estados: pendiente de enviar, enviada, entrevista, oferta y rechazada.
+- Resumen con el total por estado y aviso de los seguimientos vencidos.
+- Buscador sin distinguir mayúsculas ni tildes, y filtro por estado.
+- Datos en Cloud Firestore, con reglas que aíslan a cada usuario y validan cada campo.
+
+## Stack
+
+Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS 4, Firebase (Auth + Firestore), Vitest y Vercel.
+
+## Equipo de agentes
+
+El proyecto se ha construido con tres agentes de Claude Code:
+
+| Agente | Archivo | Papel |
+|---|---|---|
+| Orquestador | [`CLAUDE.md`](CLAUDE.md) (y [`AGENTS.md`](AGENTS.md) para Codex) | Divide el trabajo en tareas, las reparte y decide cuándo están terminadas |
+| Develop | [`.claude/agents/develop.md`](.claude/agents/develop.md) | Programa siguiendo su guía |
+| Testing | [`.claude/agents/testing.md`](.claude/agents/testing.md) + [`DIRECTRICES.md`](DIRECTRICES.md) | Revisa el trabajo de Develop contra las directrices y le devuelve los fallos hasta que todo pasa |
+
+Las rondas del bucle Develop → Testing, con los fallos que se encontraron y cómo se corrigieron, están en [`docs/registro-agentes.md`](docs/registro-agentes.md).
+
+## Ejecutarlo en local
 
 ```bash
+npm install
+cp .env.example .env.local   # y rellena la configuración web de tu proyecto de Firebase
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run check` ejecuta lint, comprobación de tipos, tests y build: es lo que exige Testing antes de aprobar una tarea.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Las reglas de Firestore se publican con `firebase deploy --only firestore`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Las claves no están en el repositorio. En Vercel se configuran como variables de entorno `NEXT_PUBLIC_FIREBASE_*`.
